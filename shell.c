@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
-
+#include "string.h"
 
 char *read_line(void) {
     char *line = NULL;
@@ -13,7 +13,6 @@ char *read_line(void) {
             exit(EXIT_FAILURE);
         }
     }
-    return line;
 }
 
 #define TOK_BUFSIZE 64
@@ -22,26 +21,22 @@ char **split_line(char *line) {
     int bufsize = TOK_BUFSIZE, position = 0;
     char **tokens = malloc(bufsize * sizeof(char *));
     char *token;
-
     if (!tokens) {
-        fprintf(stderr, "lsh: allocation error\n");
+        fprintf(stderr, "allocation error\n");
         exit(EXIT_FAILURE);
     }
-
-    token = strtok(line, TOK_DELIM);
+    token = strtok(line, TOK_BUFSIZE);
     while (token != NULL) {
         tokens[position] = token;
         position++;
-
         if (position >= bufsize) {
             bufsize += TOK_BUFSIZE;
             tokens = realloc(tokens, bufsize * sizeof(char *));
             if (!tokens) {
-                fprintf(stderr, "lsh: allocation error\n");
+                fprintf(stderr, "allocation error\n");
                 exit(EXIT_FAILURE);
             }
         }
-
         token = strtok(NULL, TOK_DELIM);
     }
     tokens[position] = NULL;
@@ -63,12 +58,8 @@ void shell_loop(void) {
     } while (status);
 }
 
-
-
-
 int main(int argc, char **argv) {
     printf("asd");
     shell_loop();
     return EXIT_SUCCESS;
 }
-
